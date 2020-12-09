@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NotFoundPage from './Pages/NotFoundPage';
 import AppLayout from './Layouts/AppLayout';
+import User from './models/User';
 
 
 const ProtectedRoute = ({ component, ...args }: any) => (

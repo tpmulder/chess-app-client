@@ -4,7 +4,12 @@ import ClientBase from "./base/ClientBase";
 
 class Auth0Client extends ClientBase {
     constructor() {
-        super(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2`);
+        const scopes = `${process.env.REACT_APP_AUTH0_SCOPES}`.split('-').join(' ');
+        const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+        const id = process.env.REACT_APP_AUTH0_ID;
+        const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+
+        super(`https://${domain}/api/v2`, true, `@@auth0spajs@@::${id}::${audience}::openid profile email ${scopes} offline_access`);
     }
 
     async getAccessToken(tokenFunc: (options?: GetTokenSilentlyOptions) => Promise<string>) {        

@@ -1,1 +1,0 @@
-export const isSuccessStatuscode = (statuscode: number) => statuscode > 200 && statuscode >= 300;

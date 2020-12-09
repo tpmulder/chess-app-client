@@ -11,9 +11,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/Mail';
 import NavDrawer from './NavDrawer';
 
-const useStyles = (props: { drawerWidth: number }) => makeStyles((theme: Theme) =>
+const useStyles = (props: { drawerWidth: number, height: number }) => makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
+      [theme.breakpoints.up('sm')]: {
+        height: props.height,
+      },
       transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -98,8 +101,8 @@ const useStyles = (props: { drawerWidth: number }) => makeStyles((theme: Theme) 
   })
 )()
 
-const NavBar: React.FC<{ drawerWidth: number, drawerIsOpen: boolean, setDrawerIsOpen: (isOpen: boolean) => void }> = (props) => {
-  const classes = useStyles({ drawerWidth: props.drawerWidth });
+const NavBar: React.FC<{ drawerWidth: number, drawerIsOpen: boolean, barHeight: number, setDrawerIsOpen: (isOpen: boolean) => void }> = (props) => {
+  const classes = useStyles({ drawerWidth: props.drawerWidth, height: props.barHeight });
   const navMenuId = 'nav-menu';
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

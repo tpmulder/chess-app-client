@@ -1,43 +1,40 @@
+import { AxiosResponse } from "axios";
 import ClientBase from "./base/ClientBase";
 
 class ApiClient extends ClientBase {
     constructor() {
-        super(`${process.env.REACT_APP_API}`)
+        super(`${process.env.REACT_APP_API}`, true, `${process.env.REACT_APP_TOKEN_STORAGE}`)
     }
 
-    async getAccessToken() {
-        const token = localStorage.getItem(`${process.env.REACT_APP_ACCESS_TOKEN_STORAGE}`);
+    async get<T>(route: string): Promise<T> {
+        return await this.operate(() => this._client.get<T>(route));
+    }
 
-        if (token === null) {
-            const result = await this._client.post(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/oauth/token`, { 
-                client_id:`${process.env.REACT_APP_API_CLIENT_ID}`,
-                client_secret:`${process.env.REACT_APP_API_CLIENT_SECRET}`,
-                audience:`${process.env.REACT_APP_API_AUDIENCE}`,
-                grant_type:"client_credentials"
-              }, { headers: { 'content-type': 'application/json' } })
+    async put<T>(route: string, item: T): Promise<T> {
+        return await this.operate(() => this._client.put<T>(route, item));
+    }
 
-              const accessToken = result.data.access_token;
-    
-              console.log(accessToken);
-    
-              localStorage.setItem('api-token', accessToken);
+    async post<T>(route: string, item: Partial<T>): Promise<T> {
+        return await this.operate(() => this._client.post<T>(route, item));
+    }
 
-              return accessToken;
-        } else {
-            return token;
+    async operate<T>(method: () => Promise<AxiosResponse<T>>) {
+        try {
+            const response = await method();
+
+            if (this.isSuccessStatuscode(response.status)) {
+                throw new Error(`${response.status} ${response.statusText}`);
+            }
+
+            return response.data;
+        }
+        catch (error) {
+            throw new Error(error.message);
         }
     }
 
-    async get<T>(url: string): Promise<T[]> {
-        let response = await this._client.get<T[]>(url);
-
-        return response.data;
-    }
-
-    async create<T>(url: string, item: T): Promise<any> {
-        let response = await this._client.post(url, item);
-
-        return response.data;
+    isSuccessStatuscode(statuscode: number): boolean {
+        return (statuscode > 200 && statuscode >= 300);
     }
 }
 

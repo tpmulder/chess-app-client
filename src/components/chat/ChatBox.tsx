@@ -6,7 +6,7 @@ import Message from '../../models/Message';
 import User from '../../models/User';
 import Room from '../../models/Room';
 
-const useStyles = (props: { boxWidth: string, boxHeight: string }) => makeStyles((theme: Theme) => createStyles({
+const useStyles = (props: { boxWidth: number, boxHeight: number }) => makeStyles((theme: Theme) => createStyles({
     chatScreen: {
         height: '60%',
         marginBottom: theme.spacing(3)
@@ -33,8 +33,8 @@ const useStyles = (props: { boxWidth: string, boxHeight: string }) => makeStyles
     }
 }))
 
-const ChatBox: React.FC<{ currentUser: User, room: Room }> = (props) => {
-    const classes = useStyles({ boxWidth: '20%', boxHeight: '800px' })();
+const ChatBox: React.FC<{ currentUser: User, room: Room, width: number, height: number }> = (props) => {
+    const classes = useStyles({ boxWidth: props.width, boxHeight: props.height })();
 
     const [messages, setMessages] = useState<Message[] | null>(null)
     const [chat, setChat] = React.useState('');
@@ -46,7 +46,7 @@ const ChatBox: React.FC<{ currentUser: User, room: Room }> = (props) => {
 
         const query = lastMsg !== null ? `?p=${lastMsg.sentOn.toString()}` : '';
 
-        setMessages(await apiClient.get<Message>(`/rooms/${props.room.id}/messages${query}`));
+        setMessages(await apiClient.get<Message[]>(`/rooms/${props.room._id}/messages${query}`));
 
     })()}, [ hasRecievedNewMessages, messages ]);
 
@@ -56,7 +56,7 @@ const ChatBox: React.FC<{ currentUser: User, room: Room }> = (props) => {
         if (chat.trim() !== '')
         console.log(chat);
 
-        apiClient.create(`/rooms/${props.room.id}/messages`, { text: chat, sentOn: new Date(), senderId: props.currentUser.id });
+        apiClient.post(`/rooms/${props.room._id}/messages`, { text: chat, sentOn: new Date(), senderId: props.currentUser._id });
 
         setChat('');
     }

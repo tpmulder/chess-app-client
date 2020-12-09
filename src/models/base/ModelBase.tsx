@@ -1,3 +1,3 @@
 export interface ModelBase {
-    id: string
+    _id: string
 }

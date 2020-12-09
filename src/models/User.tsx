@@ -1,6 +1,8 @@
 import { ModelBase } from "./base/ModelBase";
 
 export default interface User extends ModelBase {
-    displayName: string
+    email: string
     picture: string
+    displayName: string
+    rating: string
 }

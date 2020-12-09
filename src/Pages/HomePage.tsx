@@ -1,11 +1,11 @@
 import { Grid, Paper, Typography } from "@material-ui/core";
-import React from "react";
-import ChatBox from "../components/chat/ChatBox";
+import React, { useEffect } from "react";
 
 const HomePage = () => {
     return (
         <Grid item xs={12}>
             <Paper elevation={5} square className="text-center">
+                <Typography>hghf</Typography>
             </Paper>
         </Grid>
     );
